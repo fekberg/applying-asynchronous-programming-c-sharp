@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using StockAnalyzer.Core.Domain;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using System.Threading;
 using System.Windows;
 using System.Windows.Navigation;
-using Newtonsoft.Json;
-using StockAnalyzer.Core.Domain;
 
 namespace StockAnalyzer.Windows
 {
     public partial class MainWindow : Window
     {
+        private static string API_URL = "https://ps-async.fekberg.com/api/stocks";
         private Stopwatch stopwatch = new Stopwatch();
 
         public MainWindow()
@@ -23,17 +25,16 @@ namespace StockAnalyzer.Windows
         {
             BeforeLoadingStockData();
 
-
-
             var client = new WebClient();
 
-            var content = client.DownloadString($"https://ps-async.fekberg.com/api/stocks/{Ticker.Text}");
+            var content = client.DownloadString($"{API_URL}/{StockIdentifier.Text}");
+
+            // Simulate that the web call takes a very long time
+            Thread.Sleep(10000);
 
             var data = JsonConvert.DeserializeObject<IEnumerable<StockPrice>>(content);
 
             Stocks.ItemsSource = data;
-
-
 
             AfterLoadingStockData();
         }
@@ -54,7 +55,7 @@ namespace StockAnalyzer.Windows
 
         private void AfterLoadingStockData()
         {
-            StocksStatus.Text = $"Loaded stocks for {Ticker.Text} in {stopwatch.ElapsedMilliseconds}ms";
+            StocksStatus.Text = $"Loaded stocks for {StockIdentifier.Text} in {stopwatch.ElapsedMilliseconds}ms";
             StockProgress.Visibility = Visibility.Hidden;
         }
 

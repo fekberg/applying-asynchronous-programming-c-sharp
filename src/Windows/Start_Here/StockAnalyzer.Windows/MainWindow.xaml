@@ -5,30 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StockAnalyzer.Windows"
         mc:Ignorable="d"
+        FontSize="20"
         Title="Applying Asynchronous Programming in C#" Height="450" Width="800">
 
     <DockPanel>
-        <Menu Height="20" DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem x:Name="Close" Header="_Close" Click="Close_OnClick"/>
+        <Menu Height="30" DockPanel.Dock="Top">
+            <MenuItem Header="_File" FontSize="20">
+                <MenuItem x:Name="Close" FontSize="20" Header="_Close" Click="Close_OnClick"/>
             </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Padding="5" x:Name="StocksStatus">No data loaded</TextBlock>
+                <TextBlock Padding="5" FontSize="18" x:Name="StocksStatus">No data loaded</TextBlock>
             </StatusBarItem>
             <StatusBarItem>
                 <ProgressBar x:Name="StockProgress" Width="200" Height="15" Visibility="Hidden"></ProgressBar>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock Padding="5">
+                <TextBlock Padding="5" FontSize="18">
                     Data provided for free by <Hyperlink NavigateUri="https://iextrading.com/developer/" RequestNavigate="Hyperlink_OnRequestNavigate">IEX</Hyperlink>. View <Hyperlink NavigateUri="https://iextrading.com/api-exhibit-a/" RequestNavigate="Hyperlink_OnRequestNavigate">IEX’s Terms of Use.</Hyperlink>
                 </TextBlock>
             </StatusBarItem>
         </StatusBar>
         <Grid Margin="5">
             <Grid.RowDefinitions>
-                <RowDefinition Height="60" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <GroupBox Padding="5">
@@ -40,7 +41,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="100" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Padding="3" Margin="0 0 20 0" x:Name="Ticker"></TextBox>
+                    <TextBox Grid.Column="0" Padding="3" Margin="0 0 20 0" x:Name="StockIdentifier"></TextBox>
                     <Button x:Name="Search" Grid.Column="1" Click="Search_Click">Search</Button>
                 </Grid>
             </GroupBox>
@@ -51,7 +52,7 @@
                 </Grid.ColumnDefinitions>
                 <GroupBox Padding="5">
                     <GroupBox.Header>Stock Data</GroupBox.Header>
-                    <DataGrid x:Name="Stocks"></DataGrid>
+                    <DataGrid FontSize="20" x:Name="Stocks"></DataGrid>
                 </GroupBox>
                 <GroupBox Padding="5" Grid.Column="1">
                     <GroupBox.Header>Notes</GroupBox.Header>
