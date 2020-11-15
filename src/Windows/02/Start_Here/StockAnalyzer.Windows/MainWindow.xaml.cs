@@ -23,6 +23,8 @@ namespace StockAnalyzer.Windows
 
         private void Search_Click(object sender, RoutedEventArgs e)
         {
+            BeforeLoadingStockData();
+
             var client = new WebClient();
 
             var content = client.DownloadString($"{API_URL}/{StockIdentifier.Text}");

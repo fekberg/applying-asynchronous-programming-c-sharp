@@ -19,8 +19,6 @@ namespace StockAnalyzer.Core
 
         public async Task<IList<StockPrice>> GetStockPrices(string stockIdentifier)
         {
-            await Task.Delay(5000);
-
             var prices = new List<StockPrice>();
 
             using (var stream =
@@ -60,6 +58,8 @@ namespace StockAnalyzer.Core
             {
                 throw new KeyNotFoundException($"Could not find any stocks for {stockIdentifier}");
             }
+
+            await Task.Delay(5000);
 
             return prices;
         }
