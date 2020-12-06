@@ -31,15 +31,14 @@ namespace StockAnalyzer.Windows
 
         CancellationTokenSource cancellationTokenSource;
 
-        private async void Search_Click(object sender, RoutedEventArgs e)
+
+
+
+        private void Search_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var data = await GetStocksFor(StockIdentifier.Text);
-
-                Notes.Text = "Stocks loaded!";
-
-                Stocks.ItemsSource = data;
+                Task.Run(SearchForStocks).Wait();
             }
             catch(Exception ex)
             {
@@ -47,29 +46,25 @@ namespace StockAnalyzer.Windows
             }
         }
 
-        private async Task<IEnumerable<StockPrice>>
-            GetStocksFor(string identifier)
+
+        private async Task SearchForStocks()
         {
             var service = new StockService();
-            var data = await service.GetStockPricesFor(identifier,
-                CancellationToken.None).ConfigureAwait(false);
+            var loadingTasks = new List<Task<IEnumerable<StockPrice>>>();
 
-            
+            foreach(var identifier in StockIdentifier.Text.Split(' ', ','))
+            {
+                var loadTask = service.GetStockPricesFor(identifier,
+                    CancellationToken.None);
 
-            return data.Take(5);
+                loadingTasks.Add(loadTask);
+            }
+
+            var data = await Task.WhenAll(loadingTasks);
+
+            Stocks.ItemsSource = data.SelectMany(stock => stock);
+
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
         private static Task<List<string>> 
             SearchForStocks(CancellationToken cancellationToken)
@@ -94,6 +89,18 @@ namespace StockAnalyzer.Windows
                     return lines;
                 }
             }, cancellationToken);
+        }
+
+        private async Task<IEnumerable<StockPrice>>
+            GetStocksFor(string identifier)
+        {
+            var service = new StockService();
+            var data = await service.GetStockPricesFor(identifier,
+                CancellationToken.None).ConfigureAwait(false);
+
+            
+
+            return data.Take(5);
         }
 
         private async Task GetStocks()
