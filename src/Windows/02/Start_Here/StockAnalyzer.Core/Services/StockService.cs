@@ -20,7 +20,7 @@ namespace StockAnalyzer.Core.Services
         private int i = 0;
 
         public async Task<IEnumerable<StockPrice>>
-            GetStockPricesFor(string stockIdentifier, 
+            GetStockPricesFor(string stockIdentifier,
                               CancellationToken cancellationToken)
         {
             // Simulate that each time this method is called
@@ -40,45 +40,6 @@ namespace StockAnalyzer.Core.Services
 
                 return JsonConvert.DeserializeObject<IEnumerable<StockPrice>>(content);
             }
-        }
-    }
-
-    public class MockStockService : IStockService
-    {
-        public Task<IEnumerable<StockPrice>> 
-            GetStockPricesFor(string stockIdentifier, 
-            CancellationToken cancellationToken)
-        {
-            var stocks = new List<StockPrice>
-            {
-                new StockPrice
-                {
-                    Identifier = "MSFT",
-                    Change = 0.5m,
-                    ChangePercent = 0.75m
-                },
-                new StockPrice
-                {
-                    Identifier = "MSFT",
-                    Change = 0.5m,
-                    ChangePercent = 0.75m
-                },
-                new StockPrice
-                {
-                    Identifier = "GOOGL",
-                    Change = 0.5m,
-                    ChangePercent = 0.75m
-                },
-                new StockPrice
-                {
-                    Identifier = "GOOGL",
-                    Change = 0.5m,
-                    ChangePercent = 0.75m
-                }
-            };
-
-            var task = Task.FromResult(stocks.Where(stock => stock.Identifier == stockIdentifier));
-            return task;
         }
     }
 }

@@ -33,8 +33,8 @@ namespace StockAnalyzer.Core
                     var segments = line.Split(',');
 
                     for (var i = 0; i < segments.Length; i++) segments[i] = segments[i].Trim('\'', '"');
-
-                    if (segments[0].ToUpperInvariant()
+                   
+                    if(segments[0].ToUpperInvariant() 
                         != stockIdentifier.ToUpperInvariant())
                     {
                         continue;
@@ -54,7 +54,7 @@ namespace StockAnalyzer.Core
                 }
             }
 
-            if (!prices.Any())
+            if(!prices.Any())
             {
                 throw new KeyNotFoundException($"Could not find any stocks for {stockIdentifier}");
             }

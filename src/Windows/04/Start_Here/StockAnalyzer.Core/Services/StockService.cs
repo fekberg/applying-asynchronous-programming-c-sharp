@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using StockAnalyzer.Core.Domain;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace StockAnalyzer.Core.Services
         private int i = 0;
 
         public async Task<IEnumerable<StockPrice>>
-            GetStockPricesFor(string stockIdentifier, 
+            GetStockPricesFor(string stockIdentifier,
                               CancellationToken cancellationToken)
         {
             // Simulate that each time this method is called
