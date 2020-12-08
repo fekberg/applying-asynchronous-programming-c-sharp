@@ -2,10 +2,9 @@
 using StockAnalyzer.Core;
 using StockAnalyzer.Core.Domain;
 using StockAnalyzer.Core.Services;
-using StockAnalyzer.Windows.Services;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -36,48 +35,17 @@ namespace StockAnalyzer.Windows
         {
             try
             {
-                BeforeLoadingStockData();
+                var data = await GetStocksFor(StockIdentifier.Text);
 
-                var identifiers = StockIdentifier.Text.Split(' ', ',');
+                Notes.Text = "Stocks loaded!";
 
-                var data = new ObservableCollection<StockPrice>();
                 Stocks.ItemsSource = data;
-
-                var service = new StockDiskStreamService();
-
-                var enumerator = service.GetAllStockPrices();
-
-                await foreach(var price in enumerator
-                    // You can implement cancellation on your own!
-                    .WithCancellation(CancellationToken.None))
-                { 
-                    if(identifiers.Contains(price.Identifier))
-                    {
-                        data.Add(price);
-                    }
-                }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Notes.Text = ex.Message;
             }
-            finally
-            {
-                AfterLoadingStockData();
-            }
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
         private async Task<IEnumerable<StockPrice>>
             GetStocksFor(string identifier)
@@ -85,6 +53,8 @@ namespace StockAnalyzer.Windows
             var service = new StockService();
             var data = await service.GetStockPricesFor(identifier,
                 CancellationToken.None).ConfigureAwait(false);
+
+            
 
             return data.Take(5);
         }
@@ -101,7 +71,7 @@ namespace StockAnalyzer.Windows
 
 
 
-        private static Task<List<string>>
+        private static Task<List<string>> 
             SearchForStocks(CancellationToken cancellationToken)
         {
             return Task.Run(async () =>
@@ -113,7 +83,7 @@ namespace StockAnalyzer.Windows
                     string line;
                     while ((line = await stream.ReadLineAsync()) != null)
                     {
-                        if (cancellationToken.IsCancellationRequested)
+                        if(cancellationToken.IsCancellationRequested)
                         {
                             break;
                         }
