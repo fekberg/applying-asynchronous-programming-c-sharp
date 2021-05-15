@@ -25,9 +25,18 @@ namespace StockAnalyzer.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
+            using (var client = new HttpClient())
+            {
+                var responseTask = client.GetAsync($"{API_URL}/MSFT");
 
-            return View();
+                var response = await responseTask;
+
+                var content = await response.Content.ReadAsStringAsync();
+
+                var data = JsonConvert.DeserializeObject<IEnumerable<StockPrice>>(content);
+
+                return View(data);
+            }
         }
 
         public IActionResult Privacy()
