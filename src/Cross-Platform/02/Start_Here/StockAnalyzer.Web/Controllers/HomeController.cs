@@ -1,33 +1,44 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using StockAnalyzer.Web.Models;
 using StockAnalyzer.Core.Domain;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
 namespace StockAnalyzer.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger<HomeController> _logger;
+
         private static string API_URL = "https://ps-async.fekberg.com/api/stocks";
 
-        public ActionResult Index()
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            
+
+            return View();
+        }
+
+        public IActionResult Privacy()
         {
             return View();
         }
 
-        public ActionResult About()
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
