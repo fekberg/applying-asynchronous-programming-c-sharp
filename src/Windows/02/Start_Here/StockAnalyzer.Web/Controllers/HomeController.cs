@@ -11,11 +11,22 @@ namespace StockAnalyzer.Web.Controllers
     {
         private static string API_URL = "https://ps-async.fekberg.com/api/stocks";
 
-        public ActionResult Index()
+        public async Task<ActionResult>  Index()
         {
-            return View();
-        }
+            using (var client = new HttpClient())
+            {
+                 var responseTask = client.GetAsync($"{API_URL}/msft");
 
+                var response = await responseTask;
+
+                var content = await response.Content.ReadAsStringAsync();
+
+                var data = JsonConvert.DeserializeObject<IEnumerable<StockPrice>>(content);
+
+                return View(data);
+            }
+        }
+         
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
