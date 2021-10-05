@@ -15,7 +15,7 @@ namespace StockAnalyzer.Web.Controllers
         {
             using (var client = new HttpClient())
             {
-                 var responseTask = client.GetAsync($"{API_URL}/msft");
+                 var responseTask = client.GetAsync($"{API_URL}/MSFT");
 
                 var response = await responseTask;
 

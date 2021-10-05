@@ -8,12 +8,15 @@ using System.Net.Http;
 using System.Threading;
 using System.Windows;
 using System.Windows.Navigation;
+using StockAnalyzer.Core;
 
 namespace StockAnalyzer.Windows
 {
     public partial class MainWindow : Window
     {
         private static string API_URL = "https://ps-async.fekberg.com/api/stocks";
+        private static string MSFT = "MSFT";
+
         private Stopwatch stopwatch = new Stopwatch();
 
         public MainWindow()
@@ -29,31 +32,30 @@ namespace StockAnalyzer.Windows
 
             if (string.IsNullOrWhiteSpace(StockIdentifier.Text))
             {
-                StockIdentifier.Text = "msft";
+                StockIdentifier.Text = MSFT;
             }
 
-            using (var client = new HttpClient())
-            {
-                var responseTask = client.GetAsync($"{API_URL}/{StockIdentifier.Text}");
+            var store = new DataStore();
 
-                var response = await responseTask;
+            var responseTask = store.GetStockPrices(StockIdentifier.Text);
 
-                var content = await response.Content.ReadAsStringAsync();
+            Stocks.ItemsSource = await responseTask;
 
-                var data = JsonConvert.DeserializeObject<IEnumerable<StockPrice>>(content);
+            //using (var client = new HttpClient())
+            //{
+            //    var responseTask = client.GetAsync($"{API_URL}/{StockIdentifier?.Text}");
 
-                Stocks.ItemsSource = data;
-            }
+            //    var response = await responseTask;
+
+            //    var content = await response.Content.ReadAsStringAsync();
+
+            //    var data = JsonConvert.DeserializeObject<IEnumerable<StockPrice>>(content);
+
+            //    Stocks.ItemsSource = data;
+            //}
 
             AfterLoadingStockData();
         }
-
-
-
-
-
-
-
 
         private void BeforeLoadingStockData()
         {

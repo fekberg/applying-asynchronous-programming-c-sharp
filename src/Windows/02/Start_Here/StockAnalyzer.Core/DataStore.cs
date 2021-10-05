@@ -59,7 +59,7 @@ namespace StockAnalyzer.Core
                 throw new KeyNotFoundException($"Could not find any stocks for {stockIdentifier}");
             }
 
-            await Task.Delay(5000);
+            // await Task.Delay(5000);
 
             return prices;
         }
