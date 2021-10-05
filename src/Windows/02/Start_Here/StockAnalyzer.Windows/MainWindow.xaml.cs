@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
 using StockAnalyzer.Core;
@@ -35,11 +36,9 @@ namespace StockAnalyzer.Windows
                 StockIdentifier.Text = MSFT;
             }
 
-            var store = new DataStore();
+            var getStocksTask = GetStocks();
 
-            var responseTask = store.GetStockPrices(StockIdentifier.Text);
-
-            Stocks.ItemsSource = await responseTask;
+            await getStocksTask;
 
             //using (var client = new HttpClient())
             //{
@@ -55,6 +54,22 @@ namespace StockAnalyzer.Windows
             //}
 
             AfterLoadingStockData();
+        }
+
+        private async Task GetStocks()
+        {
+            try
+            {
+                var store = new DataStore();
+
+                var responseTask = store.GetStockPrices(StockIdentifier.Text);
+
+                Stocks.ItemsSource = await responseTask;
+            }
+            catch (Exception exception)
+            {
+                Notes.Text = exception.Message;
+            }
         }
 
         private void BeforeLoadingStockData()

@@ -32,7 +32,17 @@ Die Aufrufe können auch bei Datenbanken, Dateien usw. eingesetzt werden.
 - also it is introducing something called a continuation
   - the continuation is what will be executed after the asynchronouse operation, meaning the code after the "await" keyword
   - this code will run once the taks has completed, and it will run on the same thread that spawned the asynchronous operation, which in our case, is the UI thread
+- the <b>await</b> keyword introduces a continuation, allowing you to get back to the orginal context (thread)
+- <div style="color:red">updating the UI from different threads is not allowed</div>
+
+## Creating our own asynchronous Method
+
+- keep our methods clean => not too much code
+- <div style="color:red">async void is EVIL => only use async void for event handlers</div>
+- <div style="color:red">for all other methods use async Task</div>
 
 
 
-### Timestamp: 0
+
+
+### Timestamp: 03:10
